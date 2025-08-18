@@ -117,6 +117,36 @@ const createPost = async (req, res) => {
   }
   };
 
+  /**
+ * @desc    Delete a blog post
+ * @route   DELETE /api/posts/:id
+ * @access  Public (for now)
+ */
+
+  const deletePost = async (req,res) => {
+     try{
+      const deletedPost = await Post.findByIdAndDelete(req.param.id);
+
+      if(deletedPost){
+          res.status(200).json({ message: 'Post deleted successfully' });
+
+      }else{
+        res.status(400).json({ message: 'Post not found' });
+      }
+
+     }catch(error){
+      console.log(error);
+
+
+      if(error.name == 'CastError'){
+        return res.status(400).json({ message: `Invalid post by Id format: $(req.params.id)`});
+      }
+
+       res.status(400).json({ message: 'Error deletion of Post', error:error.message});
+
+     }
+  }
+
 
 
 
@@ -128,4 +158,5 @@ module.exports = {
   getAllPosts,
   getPostById,
   updatePost,
+  deletePost,
 };
