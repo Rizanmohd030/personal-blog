@@ -87,6 +87,7 @@ const createPost = async (req, res) => {
  */
 
   const updatePost = async(req,res) => {
+    try{
     const updatedPost =await Post.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -95,8 +96,26 @@ const createPost = async (req, res) => {
         runValidators: true,
       }
     );
-  }
 
+
+  if(updatedPost){
+    res.status(200).json(updatedPost);
+  }else{
+    res.status(400).json({ message:'Post not  found'});
+  }
+  }catch(error){
+    console.error(error);
+
+    if(error.name == 'CastError'){
+      return res.status(400).json({ message: `Invalid post Id format: ${req.params.id} `});
+    }
+    if(error.name == 'ValidationError'){
+      return res.status(400).json({ message: 'Validation error', error:error.message});
+
+    }
+    res.status(500).json({ message: 'Error updating post', error:error.message});
+  }
+  };
 
 
 
@@ -108,4 +127,5 @@ module.exports = {
   createPost,
   getAllPosts,
   getPostById,
+  updatePost,
 };
