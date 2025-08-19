@@ -5,13 +5,31 @@ require('dotenv').config();
 // importing libraries
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
+
+
+//importing routing file
+const postRoutes = require('./routes/postRoutes');
+
 
 // instance of expresss application
 const app = express();
 
+//middleware
+//adding CORS 
+app.use(cors());
+app.use(express.json());
 
 // port defining
 const PORT = process.env.PORT || 5000;
+
+
+//mount the routes
+//
+app.use('/api/posts', postRoutes);
+
+
+
 
 
 
