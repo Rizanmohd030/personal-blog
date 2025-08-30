@@ -58,27 +58,25 @@ const createPost = async (req, res) => {
  * @access  Public
  */
 
-  const getPostById = async(req,res) =>{
-    try{
-      const Post = await Post.findById(req.params.id);
+ const getPostById = async(req,res) =>{
+  try{
+    const post = await Post.findById(req.params.id); 
 
-      if(post){
-        res.status(200).json(post);
-      }else{
-        res.status(400).json({message: 'Post not found'});
-      }
-    }catch(error) {
-      console.log(error);
-      
-      if(error.name === 'CastError'){
-        return res.status(400).status(400).json({message:` Invalid post ID format:${req.params.id}`});
-
-      }
-
-      res.status(500).json({message:'Error fetching post',error:error.message});
-
+    if(post){
+      res.status(200).json(post);
+    }else{
+      res.status(404).json({message: 'Post not found'}); 
     }
-  };
+  }catch(error) {
+    console.log(error);
+    
+    if(error.name === 'CastError'){
+      return res.status(400).json({message: `Invalid post ID format: ${req.params.id}`});
+    }
+
+    res.status(500).json({message:'Error fetching post',error:error.message});
+  }
+};
 
   /**
  * @desc    Update an existing blog post
@@ -123,30 +121,25 @@ const createPost = async (req, res) => {
  * @access  Public (for now)
  */
 
-  const deletePost = async (req,res) => {
-     try{
-      const deletedPost = await Post.findByIdAndDelete(req.param.id);
+const deletePost = async (req,res) => {
+  try{
+    const deletedPost = await Post.findByIdAndDelete(req.params.id); 
 
-      if(deletedPost){
-          res.status(200).json({ message: 'Post deleted successfully' });
+    if(deletedPost){
+        res.status(200).json({ message: 'Post deleted successfully' });
+    }else{
+      res.status(404).json({ message: 'Post not found' }); 
+    }
+  }catch(error){
+    console.log(error);
 
-      }else{
-        res.status(400).json({ message: 'Post not found' });
-      }
+    if(error.name == 'CastError'){
+      return res.status(400).json({ message: `Invalid post ID format: ${req.params.id}`}); 
+    }
 
-     }catch(error){
-      console.log(error);
-
-
-      if(error.name == 'CastError'){
-        return res.status(400).json({ message: `Invalid post by Id format: $(req.params.id)`});
-      }
-
-       res.status(400).json({ message: 'Error deletion of Post', error:error.message});
-
-     }
+    res.status(500).json({ message: 'Error deleting post', error:error.message}); 
   }
-
+}
 
 
 
