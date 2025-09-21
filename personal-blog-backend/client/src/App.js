@@ -14,10 +14,16 @@ import LoginPage from './pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard'; 
 // HIGHLIGHT END
 
+import Navbar from './components/Navbar'; // Adjust path if needed
+
+
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
+        
+        <Navbar />
+        <main style={{ padding: '1rem' }}>
         <Routes>
           {/* HIGHLIGHT START */}
           {/*
@@ -32,6 +38,7 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           {/* HIGHLIGHT END */}
         </Routes>
+        </main>
       </div>
     </BrowserRouter>
   );
