@@ -1,25 +1,28 @@
 
 const express = require('express');
-
-//we can use object to pull the controller functions
-const {
-    createPost,
-    getAllPosts,
-    getPostById,
-    updatePost,
-    deletePost,
-} = require('../controllers/postController');
-
-//now i created a router object for handling all routes logic
-const router= express.Router();
+const router = express.Router();
+const postController = require('../controllers/postController');
 
 
-//here i defines the routes for the post using get and post methods
-router.route('/').get(getAllPosts).post(createPost);
+const {protect} = require('../Middleware/authMiddleware');
 
-//routes for specific endpoints using :id 
-router.route('/:id').get(getPostById).patch(updatePost).delete(deletePost);
 
+// GET all posts
+router.get('/', postController.getAllPosts);
+// GET a single post by its ID
+router.get('/:id', postController.getPostById);
+
+// POST a new post
+// --- PROTECTED ADMIN ROUTES ---
+// These routes are for modifying data and must be protected.
+// A user must be logged in as an admin to access them.
+router.post('/', protect, postController.createPost);
+
+//for PUT(update)
+router.put('/:id', protect, postController.updatePost);
+
+//for DELETE
+router.delete('/:id', protect, postController.deletePost);
 
 //export it
 
