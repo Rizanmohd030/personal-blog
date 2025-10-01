@@ -11,7 +11,7 @@ const PostListByItem =({post})=>{
     .substring(0,100); // Get the first 100 characters
 
     return(
-        <Link to={`/post/${post._id}`} className="post-link">
+        <Link to={`/post/${post.Slug}`} className="post-link">
         <article className = "post-list-item">
             <h2>
                 {post.title}

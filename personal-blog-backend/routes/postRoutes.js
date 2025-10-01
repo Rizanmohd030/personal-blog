@@ -10,7 +10,7 @@ const {protect} = require('../Middleware/authMiddleware');
 // GET all posts
 router.get('/', postController.getAllPosts);
 // GET a single post by its ID
-router.get('/:id', postController.getPostById);
+router.get('/:Slug', postController.getPostBySlug);
 
 // POST a new post
 // --- PROTECTED ADMIN ROUTES ---

@@ -1,8 +1,10 @@
 import React,{useState,useEffect} from 'react';
-import axios from 'axios';
+import apiService  from '../services/apiService';
+import { Helmet } from 'react-helmet-async';
+
 
 import PostListItem from '../components/PostListItem';
-
+import './HomePage.css';
 const HomePage = ()=> {
   //using usestate to perform three peices
    // - posts: an array to hold the blog posts fetched from the API. Initialized to an empty array.
@@ -13,53 +15,92 @@ const HomePage = ()=> {
   const[loading,setLoading] = useState(true);
   const[error,setError] = useState(null);
 
+    // We start on page 1.
+  const [currentPage, setCurrentPage] = useState(1);
+  // We don't know the total pages yet, so we start with null.
+  const [totalPages, setTotalPages] = useState(null);
   //  DATA FETCHING WITH useEffect
     // The empty dependency array [] ensures this effect runs only once.
 
     useEffect(() => {
       const fetchPosts = async () => {
+         setLoading(true);
+      setError('');
         try{
-          const response = await axios.get('http://localhost:5000/api/posts');
-          setPosts(response.data);
-          setError(null);
-        }catch(err){
-          setError('Failed to fetch Post,Please try again Later. ');
-          console.error('Error fetching Posts:',err);
-        }finally{               ///this finally runs irrespective of succes or failure
-          setLoading(false);  //to end the fetching process
-        }
+        const response = await apiService.get(`/posts?page=${currentPage}&limit=10`);
+                const { posts: fetchedPosts, totalPages: fetchedTotalPages } = response.data;
+
+          setPosts(fetchedPosts);
+        setTotalPages(fetchedTotalPages);
+        }catch (err) {
+        console.error("Failed to fetch posts:", err);
+        setError("Failed to load posts. Please try again.");
+      } finally {
+        setLoading(false);
+      }
       };
 fetchPosts();
-},[]);
+},[currentPage]);
 
-// CONDITIONAL RENDERING
-// - If loading is true, it displays a loading message.
-if(loading){
-  return<div>Loading Post...</div>;
-}
+  // 7. Handler functions for our pagination buttons.
+  const handleNextPage = () => {
+    // We only move to the next page if we're not already on the last page.
+    if (currentPage < totalPages) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  };
 
-// - If there's an error, it displays the error message.
-if(error){
-  return<div style={{color:'red'}}>{error}</div>;
-}
+  const handlePreviousPage = () => {
+    // We only move to the previous page if we're not on the first page.
+    if (currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+  };
 
-// render the post
-//  If loading is false and there is no error, we render the list of posts.
-return(
-  <div>
-    <h1>Blog Posts</h1>
-    {postMessage.length===0?(
-      <p>No Post yet.Be the First One To Create one! </p>
-    ):(
-   
-         <div className="post-list">
-          {/*
-           - The 'post' prop is how we pass the data for a single post down to the child component.
-              The name 'post' here must match the destructured name `{ post }` in the child.
-          */}
-          {post.map(post => (
-            <PostListItem key={post._id} post={post} />
-          ))}
+  // UI Rendering Logic
+  if (loading) return <div>Loading posts...</div>;
+  if (error) return <div>{error}</div>;
+
+  return (
+    <div className="home-page">
+         <Helmet>
+        <title>My Awesome Blog - Latest Posts</title>
+        <meta 
+          name="description" 
+          content="Welcome to My Awesome Blog. Read the latest articles on web development, technology, and more." 
+        />
+      </Helmet>
+      <h1>Latest Posts</h1>
+      <div className="post-list">
+        {posts.length > 0 ? (
+          posts.map(post => <PostListItem key={post._id} post={post} />)
+        ) : (
+          <p>No posts to display.</p>
+        )}
+      </div>
+
+      {/* 8. Render the pagination controls only if there are posts and pages. */}
+      {totalPages > 0 && (
+        <div className="pagination-controls">
+          <div className="page-info">
+            Page {currentPage} of {totalPages}
+          </div>
+          <div className="pagination-buttons">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1} // Disable if on the first page
+              className="btn"
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages} // Disable if on the last page
+              className="btn"
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>

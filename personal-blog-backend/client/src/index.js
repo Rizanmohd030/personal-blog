@@ -2,16 +2,22 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css'; // We'll keep the base styles for now
+// HIGHLIGHT START
+// 1. Import the HelmetProvider from the library you installed.
+import { HelmetProvider } from 'react-helmet-async';
+// HIGHLIGHT END
 import App from './App';
+import './index.css';
 
-// This is the core logic that tells React where to render the application.
-// It finds the HTML element with the id of 'root' in your public/index.html file.
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
-// It then renders your main <App /> component inside that root element.
 root.render(
   <React.StrictMode>
-    <App />
+    {/* HIGHLIGHT START */}
+    {/* 2. Wrap your entire App component with the HelmetProvider.
+        This provides the necessary context for all child Helmet components to work correctly. */}
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+    {/* HIGHLIGHT END */}
   </React.StrictMode>
 );

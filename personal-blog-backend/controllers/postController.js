@@ -40,17 +40,32 @@ const createPost = async (req, res) => {
    * @access  Public (for now)
    */
 
-  const getAllPosts = async(req , res) =>{
-    try{
-        const posts = await Post.find({}).sort({createdAt: -1});
-        res.status(200).json(posts);
-    
-    }catch(error){
-      console.log(error);
-      res.status(500).json({message: 'Error fetching posts' , error: error.message});
-      /// above HTTP 500 error due to db not client side hence its 500 and nort 400;
-    }
-  };
+ exports.getAllPosts = async(req , res) =>{
+  try{
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 posts per page.
+
+        // This is the core formula for pagination.
+    const skip = (page - 1) * limit;
+
+        const totalPosts = await Post.countDocuments();
+      const posts = await Post.find()
+      .sort({ createdAt: -1 }) // Sort by creation date, newest first.
+      .skip(skip)               // Skip the documents for previous pages.
+      .limit(limit);            // Limit the results to the number per page.
+
+    // 5. Send a structured response with pagination metadata.
+    // The frontend will need this information to build pagination controls.
+    res.status(200).json({
+      posts,
+      currentPage: page,
+      totalPages: Math.ceil(totalPosts / limit), // Calculate total pages.
+      totalPosts,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching posts', error: error.message });
+  }
+  }
 
   /**
  * @desc    Get a single blog post by its ID
@@ -58,26 +73,20 @@ const createPost = async (req, res) => {
  * @access  Public
  */
 
- const getPostById = async(req,res) =>{
-  try{
-    const post = await Post.findById(req.params.id); 
+  exports.getPostBySlug = async(req,res)=>{
+    try{
+    const post = await Post.findOne({ slug: req.params.slug });
 
-    if(post){
-      res.status(200).json(post);
-    }else{
-      res.status(404).json({message: 'Post not found'}); 
-    }
-  }catch(error) {
-    console.log(error);
+        if (!post) {
+                return res.status(404).json({ message: 'Post not found' });
+        }
+
+        res.status(200).json(post);
+    }catch(error){
+        res.status(500).json({ message: 'Error fetching post', error: error.message });
     
-    if(error.name === 'CastError'){
-      return res.status(400).json({message: `Invalid post ID format: ${req.params.id}`});
-    }
-
-    res.status(500).json({message:'Error fetching post',error:error.message});
   }
-};
-
+  }
   /**
  * @desc    Update an existing blog post
  * @route   PATCH /api/posts/:id (or PUT)
@@ -140,6 +149,8 @@ const deletePost = async (req,res) => {
     res.status(500).json({ message: 'Error deleting post', error:error.message}); 
   }
 }
+
+
 
 
 

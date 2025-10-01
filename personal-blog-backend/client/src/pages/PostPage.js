@@ -2,62 +2,71 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+// HIGHLIGHT START
+// 1. Import the Helmet component here as well.
+import { Helmet } from 'react-helmet-async';
+// HIGHLIGHT END
 import ReactMarkdown from 'react-markdown';
-
-// Import the stylesheet.
-
-import '../markdown-styles.css';
+import apiService from '../services/apiService';
+import './markdown-styles.css';
 
 const PostPage = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    // ... data fetching logic remains the same
     const fetchPost = async () => {
-      setLoading(true);
-      setError(null);
+      // ... your existing data fetching logic remains the same ...
       try {
-        const response = await axios.get(`http://localhost:5000/api/posts/${id}`);
+        const response = await apiService.get(`/posts/${slug}`);
         setPost(response.data);
       } catch (err) {
-        console.error("Error fetching post:", err);
-        if (err.response && err.response.status === 404) {
-          setError('Post not found.');
-        } else {
-          setError('Failed to load the post. Please try again later.');
-        }
+        setError('Post not found or an error occurred.');
       } finally {
         setLoading(false);
       }
     };
-
     fetchPost();
-  }, [id]);
+  }, [slug]);
 
-  // ... conditional rendering for loading/error states remains the same
-  if (loading) {
-    return <div>Loading post...</div>;
-  }
-  if (error) {
-    return <div style={{ color: 'red', textAlign: 'center', marginTop: '2rem' }}>Error: {error}</div>;
-  }
-  if (!post) {
-    return <div>Post not found.</div>;
-  }
+  // A helper function to create a short, clean description from the markdown content.
+  const createMetaDescription = (markdown) => {
+    if (!markdown) return '';
+    // Remove Markdown formatting and trim to a suitable length (e.g., 155 chars).
+    const plainText = markdown
+      .replace(/!\[.*?\]\(.*?\)/g, '') // Remove images
+      .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Keep link text
+      .replace(/[`*#_~]/g, '') // Remove markdown characters
+      .replace(/\s+/g, ' '); // Normalize whitespace
+    
+    return plainText.substring(0, 155).trim() + '...';
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+  // This check is important. We don't want to render the Helmet if the post doesn't exist.
+  if (!post) return <div>Post not found.</div>;
 
   return (
-    <article className="post-full">
+    <article className="post-page">
+      {/* HIGHLIGHT START */}
+      {/* 2. Add the Helmet component, using the fetched 'post' data. */}
+      <Helmet>
+        {/* We create a dynamic title using the post's title. */}
+        <title>{`${post.title} | My Awesome Blog`}</title>
+        {/* We create a dynamic meta description from the post's content. */}
+        <meta 
+          name="description" 
+          content={createMetaDescription(post.markdownContent)} 
+        />
+      </Helmet>
+      {/* HIGHLIGHT END */}
+
       <h1>{post.title}</h1>
-      <div className="post-full-meta">
-        <span>by {post.author}</span>
-        <span>Published on {new Date(post.createdAt).toLocaleDateString()}</span>
-      </div>
-      
-      <div className="post-full-content">
+      <p className="post-meta">By {post.author} on {new Date(post.createdAt).toLocaleDateString()}</p>
+      <div className="post-content">
         <ReactMarkdown>{post.markdownContent}</ReactMarkdown>
       </div>
     </article>

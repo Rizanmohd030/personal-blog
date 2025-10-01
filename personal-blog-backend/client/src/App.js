@@ -1,4 +1,4 @@
-// client/src/App.js
+
 
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -12,10 +12,12 @@ import PostPage from './pages/PostPage';
 import LoginPage from './pages/LoginPage';
 // We'll also import the AdminDashboard to prepare for future steps.
 import AdminDashboard from './pages/AdminDashboard'; 
-// HIGHLIGHT END
+
+import CreatePost from './pages/CreatePost';
+import EditPost from './pages/EditPost';
 
 import Navbar from './components/Navbar'; // Adjust path if needed
-
+import ProtectedRoute  from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -31,12 +33,30 @@ function App() {
             When the path matches, React Router will render the specified component.
           */}
           <Route path="/" element={<HomePage />} />
-          <Route path="/post/:id" element={<PostPage />} />
+          <Route path="/post/:Slug" element={<PostPage />} />
           <Route path="/admin/login" element={<LoginPage />} />
           
           {/* This route will be protected later, but we can define it now. */}
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          {/* HIGHLIGHT END */}
+          
+          <Route path="/admin/dashboard" 
+          element={
+          <ProtectedRoute>
+          <AdminDashboard />
+          </ProtectedRoute>
+        } />
+          <Route path="/admin/create-post" 
+          element={
+          <ProtectedRoute>
+          <CreatePost />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/edit-post/:id"
+        element={
+          <ProtectedRoute>
+            <EditPost/>
+          </ProtectedRoute>
+        }
+        />
         </Routes>
         </main>
       </div>
