@@ -1,9 +1,17 @@
 import axios from 'axios';
+
+const token = localStorage.getItem('jwt');
+
 // 1. Create a new Axios instance with a custom configuration.
 // We are not modifying the global axios instance. This is a best practice.
     const apiService = axios.create({
 //make a baseurl like  For example, apiService.get('/posts') will make a GET request to 'http://localhost:5000/api/posts'.
-    baseURL:'http://localhost:5000/api',
+    baseURL:process.env.REACT_APP_API_URL,
+    headers:{
+        'Content-Type': 'application/json',
+    // 3. Conditionally add the Authorization header if a token exists.
+    ...(token && { Authorization: `Bearer ${token}` }),
+    },
 });
 
 // This function will be called for EVERY request made using this 'apiService' instance.
