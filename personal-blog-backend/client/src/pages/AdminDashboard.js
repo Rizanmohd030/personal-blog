@@ -15,7 +15,7 @@ const AdminDashboard = () => {
     const fetchPosts = async () => {
       try {
         const response = await apiService.get('/posts');
-        setPosts(response.data);
+          setPosts(response.data.posts || response.data);
       } catch (err) {
         console.error('Failed to fetch posts:', err);
         setError('Failed to fetch posts. Please try again later.');
@@ -96,8 +96,7 @@ const AdminDashboard = () => {
                 <td>{post.author}</td>
                 <td>{new Date(post.createdAt).toLocaleDateString()}</td>
                 <td className="action-buttons">
-                  <Link to={`/admin/edit-post/${post._id}`} className="btn edit-btn">
-                    Edit
+<Link to={`/admin/edit-post/${post._id}`} className="btn edit-btn">                    Edit
                   </Link>
 
                   {/* HIGHLIGHT START */}

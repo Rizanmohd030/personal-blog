@@ -1,46 +1,50 @@
-import React,{useState,useEffect} from 'react';
-import apiService  from '../services/apiService';
+// client/src/pages/HomePage.js
+
+import React, { useState, useEffect } from 'react';
+import apiService from '../services/apiService';
+import PostListItem from '../components/PostListItem'; 
 import { Helmet } from 'react-helmet-async';
 
+// Assuming you have this component
+import './HomePage.css'; // Import the new stylesheet
 
-import PostListItem from '../components/PostListItem';
-import './HomePage.css';
-const HomePage = ()=> {
-  //using usestate to perform three peices
-   // - posts: an array to hold the blog posts fetched from the API. Initialized to an empty array.
-  // - loading: a boolean to indicate when data is being fetched. Initialized to true.
-  // - error: a string to hold any error messages. Initialized to null.
+const HomePage = () => {
+  // 1. Existing state for posts, loading, and error.
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const [post,setPosts] = useState([]);
-  const[loading,setLoading] = useState(true);
-  const[error,setError] = useState(null);
-
-    // We start on page 1.
+  // 2. NEW state for pagination.
+  // We start on page 1.
   const [currentPage, setCurrentPage] = useState(1);
   // We don't know the total pages yet, so we start with null.
   const [totalPages, setTotalPages] = useState(null);
-  //  DATA FETCHING WITH useEffect
-    // The empty dependency array [] ensures this effect runs only once.
 
-    useEffect(() => {
-      const fetchPosts = async () => {
-         setLoading(true);
+  // 3. Update useEffect to be aware of the currentPage.
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
       setError('');
-        try{
+      try {
+        // 4. Make the API request with pagination query parameters.
+        // We ask for the data for the 'currentPage' with a limit of 10 posts.
         const response = await apiService.get(`/posts?page=${currentPage}&limit=10`);
-                const { posts: fetchedPosts, totalPages: fetchedTotalPages } = response.data;
 
-          setPosts(fetchedPosts);
+        // 5. The backend now returns a structured object. We destructure it.
+        const { posts: fetchedPosts, totalPages: fetchedTotalPages } = response.data;
+        
+        setPosts(fetchedPosts);
         setTotalPages(fetchedTotalPages);
-        }catch (err) {
+      } catch (err) {
         console.error("Failed to fetch posts:", err);
         setError("Failed to load posts. Please try again.");
       } finally {
         setLoading(false);
       }
-      };
-fetchPosts();
-},[currentPage]);
+    };
+
+    fetchPosts();
+  }, [currentPage]); // 6. The CRUCIAL dependency array. This effect re-runs whenever 'currentPage' changes.
 
   // 7. Handler functions for our pagination buttons.
   const handleNextPage = () => {
@@ -63,13 +67,14 @@ fetchPosts();
 
   return (
     <div className="home-page">
-         <Helmet>
+      <Helmet>
         <title>My Awesome Blog - Latest Posts</title>
         <meta 
           name="description" 
           content="Welcome to My Awesome Blog. Read the latest articles on web development, technology, and more." 
         />
       </Helmet>
+     
       <h1>Latest Posts</h1>
       <div className="post-list">
         {posts.length > 0 ? (

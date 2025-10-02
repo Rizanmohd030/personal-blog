@@ -1,38 +1,51 @@
 // client/src/pages/PostPage.js
 
 import React, { useState, useEffect } from 'react';
+// 1. Make sure useParams is imported from react-router-dom
 import { useParams } from 'react-router-dom';
-// HIGHLIGHT START
-// 1. Import the Helmet component here as well.
-import { Helmet } from 'react-helmet-async';
-// HIGHLIGHT END
 import ReactMarkdown from 'react-markdown';
-import apiService from '../services/apiService';
-import './markdown-styles.css';
+// Use your apiService if you have one, or regular axios
+import apiService from '../services/apiService'; 
+
+import { Helmet } from 'react-helmet-async';
+
+// Make sure to import your markdown styles
+import './markdown-styles.css'; 
 
 const PostPage = () => {
+  // HIGHLIGHT START
+  // 2. Use object destructuring to get the 'slug' from the URL parameters.
+  // The hook knows to look for 'slug' because of the route path we defined in App.js.
   const { slug } = useParams();
+  // HIGHLIGHT END
+
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // 3. The useEffect hook will now fetch data based on the slug.
   useEffect(() => {
     const fetchPost = async () => {
-      // ... your existing data fetching logic remains the same ...
       try {
+        setLoading(true);
+        // HIGHLIGHT START
+        // 4. Update the API call to use the slug variable.
+        // This will make a GET request to the endpoint we updated on the backend,
+        // e.g., '/api/posts/my-awesome-post'.
         const response = await apiService.get(`/posts/${slug}`);
+        // HIGHLIGHT END
         setPost(response.data);
       } catch (err) {
+        console.error("Failed to fetch post:", err);
         setError('Post not found or an error occurred.');
       } finally {
         setLoading(false);
       }
     };
-    fetchPost();
-  }, [slug]);
 
-  // A helper function to create a short, clean description from the markdown content.
-  const createMetaDescription = (markdown) => {
+    fetchPost();
+  }, [slug]); // 5. The dependency array is now [slug]. The effect will re-run if the user navigates from one post to another.
+     const createMetaDescription = (markdown) => {
     if (!markdown) return '';
     // Remove Markdown formatting and trim to a suitable length (e.g., 155 chars).
     const plainText = markdown
@@ -43,16 +56,13 @@ const PostPage = () => {
     
     return plainText.substring(0, 155).trim() + '...';
   };
-
+  // ... The rest of your conditional rendering logic for loading, error, and post display remains the same ...
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
-  // This check is important. We don't want to render the Helmet if the post doesn't exist.
   if (!post) return <div>Post not found.</div>;
 
   return (
     <article className="post-page">
-      {/* HIGHLIGHT START */}
-      {/* 2. Add the Helmet component, using the fetched 'post' data. */}
       <Helmet>
         {/* We create a dynamic title using the post's title. */}
         <title>{`${post.title} | My Awesome Blog`}</title>
@@ -62,8 +72,8 @@ const PostPage = () => {
           content={createMetaDescription(post.markdownContent)} 
         />
       </Helmet>
-      {/* HIGHLIGHT END */}
-
+      
+      
       <h1>{post.title}</h1>
       <p className="post-meta">By {post.author} on {new Date(post.createdAt).toLocaleDateString()}</p>
       <div className="post-content">

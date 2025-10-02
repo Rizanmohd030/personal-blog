@@ -1,29 +1,39 @@
-
 const express = require('express');
 const router = express.Router();
-const postController = require('../controllers/postController');
 
 
-const {protect} = require('../Middleware/authMiddleware');
+// FIX: Make sure the import matches exactly with your exports
+const { 
+  getAllPosts, 
+  getPostBySlug, 
+  getPostById,  // Make sure this matches exactly
+  createPost, 
+  updatePost, 
+  deletePost 
+} = require('../controllers/postController');
 
+
+// console.log('Available exports:', Object.keys(postController));
+
+
+const { protect } = require('../Middleware/authMiddleware');
 
 // GET all posts
-router.get('/', postController.getAllPosts);
+router.get('/', getAllPosts);
+
 // GET a single post by its ID
-router.get('/:Slug', postController.getPostBySlug);
+router.get('/id/:id', getPostById);
+
+// GET a single post by its slug
+router.get('/:Slug', getPostBySlug);
 
 // POST a new post
-// --- PROTECTED ADMIN ROUTES ---
-// These routes are for modifying data and must be protected.
-// A user must be logged in as an admin to access them.
-router.post('/', protect, postController.createPost);
+router.post('/', protect, createPost);
 
-//for PUT(update)
-router.put('/:id', protect, postController.updatePost);
+// for PUT(update)
+router.put('/:id', protect, updatePost);
 
-//for DELETE
-router.delete('/:id', protect, postController.deletePost);
-
-//export it
+// for DELETE
+router.delete('/:id', protect, deletePost);
 
 module.exports = router;
