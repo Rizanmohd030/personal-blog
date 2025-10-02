@@ -8,6 +8,8 @@ import ReactMarkdown from 'react-markdown';
 import apiService from '../services/apiService'; 
 
 import { Helmet } from 'react-helmet-async';
+import CategoryTag from '../components/CategoryTag';
+
 
 // Make sure to import your markdown styles
 import './markdown-styles.css'; 
@@ -61,6 +63,14 @@ const PostPage = () => {
   if (error) return <div>{error}</div>;
   if (!post) return <div>Post not found.</div>;
 
+
+
+   const categoriesContainerStyle = {
+    marginTop: '1rem',
+    marginBottom: '1rem',
+    borderBottom: '1px solid #eee',
+    paddingBottom: '1rem'
+  };
   return (
     <article className="post-page">
       <Helmet>
@@ -76,6 +86,14 @@ const PostPage = () => {
       
       <h1>{post.title}</h1>
       <p className="post-meta">By {post.author} on {new Date(post.createdAt).toLocaleDateString()}</p>
+       {post.categories && post.categories.length > 0 && (
+        <div style={categoriesContainerStyle}>
+          {post.categories.map(category => (
+            <CategoryTag key={category} category={category} />
+          ))}
+        </div>
+      )}
+      
       <div className="post-content">
         <ReactMarkdown>{post.markdownContent}</ReactMarkdown>
       </div>

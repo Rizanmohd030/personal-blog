@@ -9,7 +9,8 @@ const {
   getPostById,  // Make sure this matches exactly
   createPost, 
   updatePost, 
-  deletePost 
+  deletePost, 
+  getPostsByCategory 
 } = require('../controllers/postController');
 
 
@@ -17,6 +18,7 @@ const {
 
 
 const { protect } = require('../Middleware/authMiddleware');
+router.get('/category/:categoryName', getPostsByCategory);
 
 // GET all posts
 router.get('/', getAllPosts);

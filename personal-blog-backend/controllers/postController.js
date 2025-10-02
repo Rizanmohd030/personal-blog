@@ -79,6 +79,31 @@ exports.getPostBySlug = async(req,res)=>{
   }
 };
 
+// for mongodb categoriess
+exports.getPostsByCategory = async (req, res) => {
+  try {
+    // 1. Extract the category name from the URL parameters.
+    // This 'categoryName' corresponds to the ':categoryName' in our route definition.
+    const categoryName = req.params.categoryName;
+
+    // 2. Use Mongoose's find() method to query the database.
+    // We are looking for all documents where the 'categories' array field
+    // contains the string value of 'categoryName'.
+    // Mongoose is smart enough to search for a value within the array.
+    const posts = await Post.find({ categories: categoryName })
+      .sort({ createdAt: -1 }); // Optional: sort the results by newest first.
+
+    // 3. If no posts are found for a category, Mongoose returns an empty array.
+    // This is a valid result, not an error. We simply return the empty array.
+
+    // 4. Send the found posts back to the client with a 200 OK status.
+    res.status(200).json(posts);
+  } catch (error) {
+    // Handle potential server errors (e.g., database connection issue).
+    res.status(500).json({ message: 'Error fetching posts by category', error: error.message });
+  }
+};
+
 /**
  * @desc    Get a single blog post by its ID
  * @route   GET /api/posts/id/:id
@@ -168,4 +193,4 @@ exports.deletePost = async (req,res) => {
 
     res.status(500).json({ message: 'Error deleting post', error: error.message }); 
   }
-};
+};  

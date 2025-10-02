@@ -1,116 +1,236 @@
 /* client/src/pages/AdminDashboard.css */
 
 .admin-dashboard {
-  max-width: 1000px;
-  margin: 2rem auto;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  border-radius: 25px 25px 0 0;
 }
 
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  border-bottom: 2px solid #f0f0f0;
-  padding-bottom: 1rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
 }
 
 .dashboard-header h2 {
   margin: 0;
-  color: #333;
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.create-post-btn {
+  padding: 12px 24px;
+  background: linear-gradient(45deg, #4ecdc4, #44a08d);
+  color: white;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.create-post-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+}
+
+.table-container {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .posts-table {
   width: 100%;
-  border-collapse: collapse; /* Removes space between table cells */
+  border-collapse: collapse;
+  background: transparent;
 }
 
-.posts-table th,
-.posts-table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #0a69c7;
+.posts-table thead {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+}
+
+.posts-table th {
+  padding: 1.2rem 1rem;
   text-align: left;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
 }
 
-.posts-table thead th {
-  background-color: #0a69c7;
-  font-weight: 600;
-  color: #495057;
+.posts-table th:first-child {
+  border-radius: 15px 0 0 0;
 }
 
-.posts-table tbody tr:nth-of-type(even) {
-  background-color: #f8f9fa;
+.posts-table th:last-child {
+  border-radius: 0 15px 0 0;
+}
+
+.posts-table td {
+  padding: 1.2rem 1rem;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+  color: #2d3748;
+  background: transparent;
+}
+
+.posts-table tbody tr {
+  transition: all 0.3s ease;
 }
 
 .posts-table tbody tr:hover {
-  background-color: #e9ecef;
+  background: rgba(102, 126, 234, 0.05);
+  transform: translateX(5px);
+}
+
+.post-title {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.action-buttons .btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-block;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.action-buttons .edit-btn {
+  background: linear-gradient(45deg, #4ecdc4, #44a08d);
+}
+
+.action-buttons .delete-btn {
+  background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+}
+
+.action-buttons .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.no-posts {
+  text-align: center;
+  color: #718096;
+  font-style: italic;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .loading-message,
 .error-message {
   text-align: center;
-  padding: 2rem;
-  font-size: 1.2rem;
-  color: #6c757d;
+  padding: 3rem;
+  font-size: 1.3rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  margin: 2rem auto;
+  max-width: 500px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.loading-message {
+  color: #667eea;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
 }
 
 .error-message {
-  color: #dc3545;
-}
-/* client/src/pages/AdminDashboard.css */
-
-/* ... all your existing styles for the dashboard and table ... */
-
-/* HIGHLIGHT START */
-/* --- Action Buttons Styling --- */
-.posts-table .action-buttons {
-  display: flex;
-  gap: 10px; /* Adds space between the buttons */
-  align-items: center;
+  color: #e53e3e;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.95), rgba(254, 242, 242, 0.95));
 }
 
-/* A general 'btn' class for both our button and Link component */
-.action-buttons .btn {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-decoration: none; /* Important for styling the Link like a button */
-  color: white;
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: inline-block; /* Also for the Link component */
-  text-align: center;
-  transition: opacity 0.2s ease-in-out;
+/* Animation for table appearance */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.action-buttons .btn:hover {
-  opacity: 0.85; /* A subtle hover effect */
+.table-container {
+  animation: slideInUp 0.6s ease-out;
 }
 
-/* Specific color for the 'Edit' button */
-.action-buttons .edit-btn {
-  background-color: #007bff; /* A standard blue for 'edit' or 'primary' actions */
-}
-
-/* Specific color for the 'Delete' button */
-.action-buttons .delete-btn {
-  background-color: #dc3545; /* A standard red for 'danger' or 'delete' actions */
-}
-
-.dashboard-header .create-post-btn {
-  padding: 8px 16px;
-  background-color: #28a745; /* Green to signify 'add' or 'create' */
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
-}
-
-.dashboard-header .create-post-btn:hover {
-  background-color: #218838;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 1rem;
+  }
+  
+  .dashboard-container {
+    padding: 1.5rem;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .dashboard-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .posts-table {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .action-buttons .btn {
+    width: 100%;
+  }
 }
