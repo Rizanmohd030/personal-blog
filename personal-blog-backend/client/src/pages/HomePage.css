@@ -1,44 +1,49 @@
 /* client/src/pages/HomePage.css */
 
+/* Base Styles - Mobile First */
 .home-page {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .home-page h1 {
   text-align: center;
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
   background: linear-gradient(45deg, #fff, #e3f2fd);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   text-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Modern Post List Grid */
+/* Post List - Mobile First */
 .post-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
-/* Glass Morphism Post Cards - Fixed for better text visibility */
+/* Glass Morphism Post Cards */
 .post-list-item {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 2rem;
+  border-radius: 15px;
+  padding: 1.5rem;
   transition: all 0.3s ease;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   position: relative;
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .post-list-item::before {
@@ -49,97 +54,97 @@
   right: 0;
   height: 4px;
   background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-  border-radius: 20px 20px 0 0;
+  border-radius: 15px 15px 0 0;
 }
 
 .post-list-item:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
   background: rgba(255, 255, 255, 1);
 }
 
-/* FIXED: Black text for better visibility */
 .post-list-item h2 {
   margin: 0 0 1rem 0;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   line-height: 1.4;
-  color: #2d3748; /* Dark gray for better contrast */
+  color: #2d3748;
+  word-wrap: break-word;
 }
 
 .post-list-item h2 a {
   text-decoration: none;
-  color: #2d3748; /* Dark gray for better contrast */
+  color: #2d3748;
   font-weight: 600;
   transition: all 0.3s ease;
   display: block;
+  padding: 0.5rem 0; /* Better touch target */
 }
 
 .post-list-item h2 a:hover {
-  color: #4ecdc4; /* Keep the accent color on hover */
+  color: #4ecdc4;
   transform: translateX(5px);
 }
 
 .post-meta {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 1rem;
   font-size: 0.9rem;
-  color: #4a5568; /* Darker gray for meta text */
+  color: #4a5568;
 }
 
 .post-meta span {
-  background: rgba(102, 126, 234, 0.1); /* Light blue background */
+  background: rgba(102, 126, 234, 0.1);
   padding: 0.3rem 0.8rem;
-  border-radius: 15px;
-  backdrop-filter: blur(5px);
-  color: #4a5568; /* Dark text */
+  border-radius: 12px;
+  color: #4a5568;
   border: 1px solid rgba(102, 126, 234, 0.2);
 }
 
 .post-list-item p {
-  color: #4a5568; /* Dark gray for content */
+  color: #4a5568;
   line-height: 1.6;
   margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 /* Modern Pagination */
 .pagination-controls {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 1rem;
   align-items: center;
-  background: rgba(255, 255, 255, 0.95); /* More opaque for better contrast */
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 15px;
-  padding: 1.5rem 2rem;
-  margin-top: 3rem;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 2rem;
 }
 
 .page-info {
   font-weight: 600;
-  color: #2d3748; /* Dark text */
-  font-size: 1.1rem;
+  color: #2d3748;
+  font-size: 1rem;
 }
 
 .pagination-buttons {
   display: flex;
   gap: 1rem;
+  width: 100%;
+  justify-content: center;
 }
 
 .pagination-buttons .btn {
-  padding: 12px 24px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 1rem;
-  position: relative;
-  overflow: hidden;
+  flex: 1;
+  max-width: 120px;
 }
 
 .pagination-buttons .btn:not(:disabled) {
@@ -150,65 +155,95 @@
 
 .pagination-buttons .btn:not(:disabled):hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 }
 
 .pagination-buttons .btn:disabled {
   background: rgba(255, 255, 255, 0.3);
-  color: rgba(74, 85, 104, 0.6); /* Darker disabled text */
+  color: rgba(74, 85, 104, 0.6);
   cursor: not-allowed;
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Loading and Error States */
-.home-page > div:first-child { /* Loading/error message styling */
+.loading, .error {
   text-align: center;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   padding: 2rem;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  border-radius: 15px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 1rem 0;
 }
 
 /* No Posts Message */
 .post-list > p {
   text-align: center;
-  color: white; /* Keep white for no posts message */
+  color: white;
   font-size: 1.1rem;
-  grid-column: 1 / -1;
-  padding: 3rem;
+  padding: 2rem;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Tablet Styles (768px and up) */
+@media (min-width: 768px) {
   .home-page {
-    padding: 1rem;
+    padding: 2rem;
+    max-width: 1200px;
   }
   
   .home-page h1 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
+    font-size: 3rem;
+    margin-bottom: 3rem;
   }
   
   .post-list {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .post-list-item {
+    padding: 2rem;
+    border-radius: 20px;
+  }
+  
+  .post-list-item h2 {
+    font-size: 1.5rem;
   }
   
   .pagination-controls {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    border-radius: 15px;
   }
   
   .pagination-buttons {
-    width: 100%;
-    justify-content: center;
+    width: auto;
+    justify-content: flex-end;
+  }
+  
+  .pagination-buttons .btn {
+    flex: none;
+    max-width: none;
+    padding: 12px 24px;
+  }
+}
+
+/* Desktop Styles (1024px and up) */
+@media (min-width: 1024px) {
+  .post-list {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+  
+  .post-list-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.2);
   }
 }
 
