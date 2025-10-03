@@ -35,7 +35,7 @@ function App() {
             When the path matches, React Router will render the specified component.
           */}
           <Route path="/" element={<HomePage />} />
-          <Route path="/post/:Slug" element={<PostPage />} />
+          <Route path="/post/:slug" element={<PostPage />} />
                     <Route path="/category/:categoryName" element={<CategoryPage />} />
 
           <Route path="/admin/login" element={<LoginPage />} />

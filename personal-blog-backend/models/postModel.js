@@ -45,9 +45,25 @@ const postSchema = new mongoose.Schema(
 
 // Mongoose pre-save hook for slug generation
 // This logic remains unchanged and will continue to work perfectly.
-postSchema.pre('save', function(next) {
-  if (this.isModified('title')) {
-    this.slug = slugify(this.title, { lower: true, strict: true });
+// postSchema.pre('save', function(next) {
+//   if (this.isModified('title')) {
+//     this.slug = slugify(this.title, { lower: true, strict: true });
+//   }
+//   next();
+// });
+postSchema.pre('save', async function(next) {
+  if (this.isModified('title') || !this.slug) {
+    let baseSlug = slugify(this.title, { lower: true, strict: true });
+    let finalSlug = baseSlug;
+    let counter = 1;
+    
+    // Check for duplicates and make unique
+    while (await this.constructor.findOne({ slug: finalSlug, _id: { $ne: this._id } })) {
+      finalSlug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+    
+    this.slug = finalSlug;
   }
   next();
 });

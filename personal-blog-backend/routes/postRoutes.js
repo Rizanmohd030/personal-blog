@@ -18,16 +18,16 @@ const {
 
 
 const { protect } = require('../Middleware/authMiddleware');
-router.get('/category/:categoryName', getPostsByCategory);
 
 // GET all posts
 router.get('/', getAllPosts);
+router.get('/category/:categoryName', getPostsByCategory);
 
 // GET a single post by its ID
 router.get('/id/:id', getPostById);
 
 // GET a single post by its slug
-router.get('/:Slug', getPostBySlug);
+router.get('/:slug', getPostBySlug);
 
 // POST a new post
 router.post('/', protect, createPost);

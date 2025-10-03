@@ -1,4 +1,6 @@
 const Post = require('../models/postModel');
+const slugify = require('slugify'); 
+
 
 /**
  * @desc    Create a new blog post
@@ -194,3 +196,37 @@ exports.deletePost = async (req,res) => {
     res.status(500).json({ message: 'Error deleting post', error: error.message }); 
   }
 };  
+
+// Add this to the bottom of your postController.js
+const addSlugsToExistingPosts = async () => {
+  try {
+    const posts = await Post.find();
+    let updatedCount = 0;
+    
+    for (let post of posts) {
+      if (!post.slug) {
+        let baseSlug = slugify(post.title, { lower: true, strict: true });
+        let finalSlug = baseSlug;
+        let counter = 1;
+        
+        // Make slug unique if another post has same slug
+        while (await Post.findOne({ slug: finalSlug, _id: { $ne: post._id } })) {
+          finalSlug = `${baseSlug}-${counter}`;
+          counter++;
+        }
+        
+        post.slug = finalSlug;
+        await post.save();
+        updatedCount++;
+        console.log(`✅ Added slug to "${post.title}": ${post.slug}`);
+      }
+    }
+    
+    console.log(`🎉 Added slugs to ${updatedCount} posts`);
+  } catch (error) {
+    console.error('❌ Error adding slugs:', error);
+  }
+};
+
+// Run it once - then remove or comment out after
+// addSlugsToExistingPosts();
