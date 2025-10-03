@@ -1,54 +1,51 @@
-import React,{useState} from 'react';
-import axios from 'axios'
-import {useNavigate} from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import apiService from '../services/apiService'; // ✅ Changed to apiService
 import './loginPage.css';
 
-const LoginPage =()=>{
+const LoginPage = () => {
+  const navigate = useNavigate();
 
-      const navigate = useNavigate();
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const[userName,setUserName] = useState('');
-  const[password,setPassword] = useState('');
-  const[loading,setLoading]= useState(false);
-  const[error,setError]=useState('');
-
-  const handleSubmit = async(event) =>{
-        
+  const handleSubmit = async (event) => {
     // a. Prevent the default form submission behavior (which causes a page reload).
-      event.preventDefault();
-      setError('');
-      setLoading(true);
+    event.preventDefault();
+    setError('');
+    setLoading(true);
 
-    try{
-      const response = await axios.post('http://localhost:5000/api/auth/login',{
+    try {
+      // ✅ Changed to apiService with relative path
+      const response = await apiService.post('/auth/login', {
         userName,
         password,
       });
 
-       // We use localStorage.setItem() to store the received token.
+      // We use localStorage.setItem() to store the received token.
       // We give it a key, 'token', so we can easily retrieve it later.
-      localStorage.setItem('token',response.data.token);
+      localStorage.setItem('token', response.data.token);
       navigate('/admin/dashboard');
 
-
-    }catch(err){
+    } catch (err) {
       console.log('Login error:', err);
-        if (err.response && err.response.data && err.response.data.message) {
+      if (err.response && err.response.data && err.response.data.message) {
         // Use the specific error message from our backend
         setError(err.response.data.message);
       } else {
-        setError('Login failed. Please try again.'); //for network errors
+        setError('Login failed. Please try again.'); // for network errors
       }
     } finally {
       setLoading(false);
     }
-    };
+  };
 
-  
-  return(
+  return (
     <div className="login-page">
       <h2>Admin login</h2>
-      <form onSubmit = {handleSubmit} className="login-Form">
+      <form onSubmit={handleSubmit} className="login-Form">
         <div className="form-group">
           <label htmlFor="username">Username</label>
           <input
@@ -57,12 +54,13 @@ const LoginPage =()=>{
             name="username"
             placeholder="Enter your Username"
             value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
-                        required 
-                        disabled={loading}
-                        /></div>
-                        <div className="foem-group">
-                            <label htmlFor="password">Password</label>
+            onChange={(e) => setUserName(e.target.value)}
+            required
+            disabled={loading}
+          />
+        </div>
+        <div className="form-group"> {/* Fixed typo: was "foem-group" */}
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
@@ -74,12 +72,13 @@ const LoginPage =()=>{
             onChange={(e) => setPassword(e.target.value)}
             required
             disabled={loading}
-          /></div> 
-            {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+          />
+        </div>
+        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
         <button type="submit" className="login-button" disabled={loading}>
           {/* 10. Show different text on the button when loading */}
           {loading ? 'Logging In...' : 'Log In'}
-          </button>
+        </button>
       </form>
     </div>
   );
