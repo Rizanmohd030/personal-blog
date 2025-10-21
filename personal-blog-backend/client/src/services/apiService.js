@@ -7,7 +7,7 @@ const token = localStorage.getItem('jwt');
     const apiService = axios.create({
 //make a baseurl like  For example, apiService.get('/posts') will make a GET request to 'http://localhost:5000/api/posts'.
     baseURL:
-        //  'http://localhost:5000/api',
+          //'http://localhost:5000/api',
          process.env.REACT_APP_API_URL,
     headers:{
         'Content-Type': 'application/json',

@@ -40,18 +40,9 @@ const PostPage = () => {
     return plainText.substring(0, 155).trim() + '...';
   };
 
-  // ✅ REMOVED: Custom components (CSS handles everything)
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!post) return <div>Post not found.</div>;
-
-  const categoriesContainerStyle = {
-    marginTop: '1rem',
-    marginBottom: '1rem',
-    borderBottom: '1px solid #eee',
-    paddingBottom: '1rem'
-  };
 
   return (
     <article className="post-page">
@@ -63,20 +54,23 @@ const PostPage = () => {
         />
       </Helmet>
       
-      <h1>{post.title}</h1>
-      <p className="post-meta">
-        By {post.author} on {new Date(post.createdAt).toLocaleDateString()}
-      </p>
+      {/* ✅ CENTERED TITLE SECTION */}
+      <header className="post-header-centered">
+        <h1 className="post-title-centered">{post.title}</h1>
+        <p className="post-meta-centered">
+          By {post.author} on {new Date(post.createdAt).toLocaleDateString()}
+        </p>
+        
+        {post.categories && post.categories.length > 0 && (
+          <div className="post-categories-centered">
+            {post.categories.map(category => (
+              <CategoryTag key={category} category={category} />
+            ))}
+          </div>
+        )}
+      </header>
       
-      {post.categories && post.categories.length > 0 && (
-        <div style={categoriesContainerStyle}>
-          {post.categories.map(category => (
-            <CategoryTag key={category} category={category} />
-          ))}
-        </div>
-      )}
-      
-      {/* ✅ SIMPLE: Let CSS handle all styling */}
+      {/* CONTENT SECTION */}
       <div className="post-full-content">
         <ReactMarkdown>{post.markdownContent}</ReactMarkdown>
       </div>
