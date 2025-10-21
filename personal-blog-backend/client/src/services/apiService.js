@@ -6,7 +6,9 @@ const token = localStorage.getItem('jwt');
 // We are not modifying the global axios instance. This is a best practice.
     const apiService = axios.create({
 //make a baseurl like  For example, apiService.get('/posts') will make a GET request to 'http://localhost:5000/api/posts'.
-    baseURL:process.env.REACT_APP_API_URL,
+    baseURL:
+        //  'http://localhost:5000/api',
+         process.env.REACT_APP_API_URL,
     headers:{
         'Content-Type': 'application/json',
     // 3. Conditionally add the Authorization header if a token exists.

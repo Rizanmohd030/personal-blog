@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import apiService from '../services/apiService';
+import ImageGallery from '../components/ImageGallery'; // ADD THIS IMPORT
 import './CreatePost.css';
 
 const EditPost = () => {
@@ -8,10 +9,35 @@ const EditPost = () => {
   const [title, setTitle] = useState('');
   const [markdownContent, setMarkdownContent] = useState('');
   const [categories, setCategories] = useState('');
+  const [images, setImages] = useState([]); // ADD: Store images separately
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const textareaRef = useRef(null); // ADD: For cursor position
+
+  // ADD: Handle image insertion at cursor position
+  const handleImageInsert = (markdownImage) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const cursorPosition = textarea.selectionStart;
+    const currentContent = markdownContent;
+    
+    const newContent = 
+      currentContent.substring(0, cursorPosition) +
+      markdownImage + '\n\n' +
+      currentContent.substring(cursorPosition);
+    
+    setMarkdownContent(newContent);
+    
+    // Focus back on textarea
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPos = cursorPosition + markdownImage.length + 2;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 10);
+  };
 
   // ADD CACHE BUSTING - Force fresh data fetch
   useEffect(() => {
@@ -26,9 +52,16 @@ const EditPost = () => {
         
         console.log('✅ Post data received:', response.data);
         console.log('✅ Post title:', response.data.title);
+        console.log('✅ Post images:', response.data.images); // ADD: Log images
         
         setTitle(response.data.title);
         setMarkdownContent(response.data.markdownContent);
+        
+        // ADD: Load existing images from the post
+        if (response.data.images && Array.isArray(response.data.images)) {
+          setImages(response.data.images);
+        }
+        
         if (response.data.categories && Array.isArray(response.data.categories)) {
           setCategories(response.data.categories.join(', '));
         }
@@ -65,10 +98,12 @@ const EditPost = () => {
     const categoriesArray = categories.split(',').map(cat => cat.trim()).filter(cat => cat);
 
     try {
+      // UPDATE: Include images in the update request
       await apiService.put(`/posts/${id}`, {
         title,
         markdownContent,
-        categories: categoriesArray
+        categories: categoriesArray,
+        images: images // ADD: Send images array to backend
       });
       navigate('/admin/dashboard');
     } catch (err) {
@@ -97,14 +132,25 @@ const EditPost = () => {
             disabled={submitting}
           />
         </div>
+
+        {/* ADD: Image Gallery Section */}
+        <ImageGallery 
+          images={images}
+          onImagesChange={setImages}
+          onImageInsert={handleImageInsert}
+        />
+
         <div className="form-group">
           <label htmlFor="markdownContent">Content (Markdown)</label>
           <textarea
+            ref={textareaRef} // ADD: Ref for cursor positioning
             id="markdownContent"
             className="form-control markdown-input"
             value={markdownContent}
             onChange={(e) => setMarkdownContent(e.target.value)}
             disabled={submitting}
+            rows="15"
+            placeholder="Write your content here. Use the image gallery above to insert images."
           />
         </div>
 

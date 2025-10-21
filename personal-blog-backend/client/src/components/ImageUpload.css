@@ -1,0 +1,40 @@
+.image-upload-dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  margin: 1rem 0;
+}
+
+.image-upload-dropzone:hover,
+.image-upload-dropzone.active {
+  border-color: #007bff;
+  background: #f0f8ff;
+}
+
+.image-upload-dropzone.uploading {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.upload-content {
+  pointer-events: none;
+}
+
+.upload-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.upload-content p {
+  margin: 0.5rem 0;
+  color: #666;
+  font-weight: 500;
+}
+
+.upload-content small {
+  color: #999;
+}

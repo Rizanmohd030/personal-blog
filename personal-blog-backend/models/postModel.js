@@ -31,7 +31,13 @@ const postSchema = new mongoose.Schema(
       // on the frontend if it expects the array to always exist.
       default: [],
     },
-    // HIGHLIGHT END
+      images: [{
+      url: String,
+      publicId: String,
+      caption: String,
+      position: Number, // To maintain order
+      uploadedAt: { type: Date, default: Date.now }
+    }],
     author: {
       type: String,
       required: [true, 'A post must have an author'],

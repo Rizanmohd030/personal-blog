@@ -1,78 +1,347 @@
-/* client/src/pages/CreatePost.css */
+/* CreatePost.css - Purple-Black Theme */
 
 .create-post-page {
-  max-width: 800px;
+  max-width: 900px;
   margin: 2rem auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(74, 20, 140, 0.5);
+  border: 2px solid #4a148c;
 }
 
 .create-post-page h2 {
   text-align: center;
-  margin-bottom: 2rem;
-  color: #333;
+  margin-bottom: 2.5rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #9c27b0 0%, #ce93d8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
 }
 
-.create-post-form .form-group {
+.create-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #ce93d8;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.form-control {
+  padding: 1rem 1.25rem;
+  border: 2px solid #4a148c;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #1a1a2e;
+  color: #e1bee7;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.form-control::placeholder {
+  color: #7e57c2;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #9c27b0;
+  background: #252542;
+  box-shadow: 0 0 0 4px rgba(156, 39, 176, 0.2), inset 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.form-control:disabled {
+  background-color: rgba(26, 26, 46, 0.5);
+  cursor: not-allowed;
+  opacity: 0.6;
+  border-color: #2d2d44;
+}
+
+.markdown-input {
+  min-height: 450px;
+  resize: vertical;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  line-height: 1.8;
+  font-size: 0.95rem;
+}
+
+/* Upload Section Styles */
+.upload-instruction {
+  background: rgba(156, 39, 176, 0.1);
+  border: 2px solid #4a148c;
+  border-radius: 12px;
+  padding: 1.25rem;
   margin-bottom: 1.5rem;
 }
 
-.create-post-form label {
+.upload-instruction small {
+  color: #b39ddb;
+  line-height: 1.6;
   display: block;
-  margin-bottom: 0.5rem;
+}
+
+/* Upload Dropzone */
+.image-upload-dropzone {
+  border: 3px dashed #4a148c;
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(145deg, #2d2d44 0%, #1f1f2e 100%);
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.image-upload-dropzone::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(156, 39, 176, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-upload-dropzone:hover::before {
+  opacity: 1;
+}
+
+.image-upload-dropzone:hover {
+  border-color: #9c27b0;
+  background: linear-gradient(145deg, #3a3a52 0%, #2a2a3e 100%);
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(156, 39, 176, 0.3);
+}
+
+.image-upload-dropzone.active {
+  border-color: #ce93d8;
+  background: linear-gradient(145deg, #3a3a52 0%, #2a2a3e 100%);
+  box-shadow: 0 0 30px rgba(156, 39, 176, 0.4);
+}
+
+.image-upload-dropzone.uploading {
+  opacity: 0.7;
+  cursor: not-allowed;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.upload-content {
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 10px rgba(156, 39, 176, 0.5));
+}
+
+.upload-content p {
+  margin: 1rem 0;
+  color: #ce93d8;
   font-weight: 600;
-  color: #555;
-}
-
-.create-post-form .form-control {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  box-sizing: border-box; /* Ensures padding doesn't affect width */
-  font-family: inherit; /* Inherit font from parent */
-}
-
-.create-post-form .form-control:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-/* Specific styling for the markdown textarea */
-.create-post-form .markdown-input {
-  min-height: 400px; /* Give plenty of space for writing */
-  resize: vertical; /* Allow user to resize the textarea vertically */
-  font-family: 'Fira Code', 'Courier New', Courier, monospace;
-}
-
-.create-post-form .submit-btn {
-  width: 100%;
-  padding: 0.8rem;
-  border: none;
-  border-radius: 4px;
-  background-color: #28a745; /* Green for success/create */
-  color: white;
   font-size: 1.1rem;
+}
+
+.upload-content small {
+  color: #9575cd;
+  font-size: 0.9rem;
+}
+
+/* Markdown Preview */
+.markdown-preview {
+  background: #1a1a2e;
+  border: 2px solid #4a148c;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #b39ddb;
+  margin-top: 0.75rem;
+}
+
+/* Submit Button */
+.submit-btn {
+  background: linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%);
+  color: white;
+  border: none;
+  padding: 1.25rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: all 0.3s ease;
+  margin-top: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  box-shadow: 0 8px 24px rgba(123, 31, 162, 0.4);
+  position: relative;
+  overflow: hidden;
 }
 
-.create-post-form .submit-btn:hover {
-  background-color: #218838;
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
 }
 
-.create-post-form .submit-btn:disabled {
-  background-color: #a5d6a7;
+.submit-btn:hover:not(:disabled)::before {
+  width: 300px;
+  height: 300px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(156, 39, 176, 0.6);
+  background: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  background: linear-gradient(135deg, #424242 0%, #616161 100%);
+  box-shadow: none;
 }
 
-.create-post-page .error-message {
-  color: #dc3545;
+/* Error Message */
+.error-message {
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+  color: #ffebee;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 2px solid #b71c1c;
   text-align: center;
-  margin-bottom: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(211, 47, 47, 0.4);
+}
+
+/* Success Message */
+.success-message {
+  background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+  color: #e8f5e9;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 2px solid #1b5e20;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(56, 142, 60, 0.4);
+}
+
+/* Loading State */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+  filter: grayscale(0.5);
+}
+
+/* Upload Status */
+.upload-status {
+  background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+  color: #e8f5e9;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 2px solid #1b5e20;
+  margin-top: 0.75rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.image-upload-dropzone.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: linear-gradient(145deg, #1f1f2e 0%, #16213e 100%);
+}
+
+.image-upload-dropzone.disabled:hover {
+  border-color: #4a148c;
+  background: linear-gradient(145deg, #1f1f2e 0%, #16213e 100%);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+.create-post-page {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .create-post-page {
+    padding: 1.5rem;
+    margin: 1rem;
+    border-radius: 16px;
+  }
+  
+  .create-post-page h2 {
+    font-size: 1.8rem;
+  }
+  
+  .form-control {
+    padding: 0.85rem 1rem;
+  }
+  
+  .markdown-input {
+    min-height: 350px;
+  }
+  
+  .image-upload-dropzone {
+    padding: 2rem;
+  }
+  
+  .upload-instruction {
+    padding: 1rem;
+  }
+  
+  .submit-btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+  }
 }

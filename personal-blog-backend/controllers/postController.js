@@ -10,7 +10,7 @@ const slugify = require('slugify');
 exports.createPost = async (req, res) => {
   try {
     // ADD CATEGORIES: Destructure categories from req.body
-    const { title, markdownContent, categories, author } = req.body;
+    const { title, markdownContent, categories,images, author } = req.body;
 
     // A simple backend validation check.
     if (!title || !markdownContent) {
@@ -21,7 +21,8 @@ exports.createPost = async (req, res) => {
     const newPost = await Post.create({
       title,
       markdownContent,
-      categories, // Add categories here
+      categories,
+      images, // Add categories here
       author, 
     });
 
@@ -133,21 +134,22 @@ exports.getPostById = async(req, res) => {
  * @route   PATCH /api/posts/:id (or PUT)
  * @access  Public (for now)
  */
-exports.updatePost = async(req,res) => {
+exports.updatePost = async(req, res) => {
   try {
-    // ADD CATEGORIES: Destructure categories from req.body
-    const { title, markdownContent, categories } = req.body;
+    // ✅ FIX: Add 'images' to destructuring
+    const { title, markdownContent, categories, images } = req.body;
 
-    // ADD CATEGORIES: Create update data object with categories
+    // Create update data object
     const updatedData = {
       title,
       markdownContent,
-      categories, // Add categories here
+      categories,
+      images, // Now this will work correctly
     };
 
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.id,
-      updatedData, // Use the updatedData object instead of req.body
+      updatedData,
       {
         new: true,
         runValidators: true,
@@ -157,21 +159,20 @@ exports.updatePost = async(req,res) => {
     if(updatedPost){
       res.status(200).json(updatedPost);
     } else {
-      res.status(400).json({ message:'Post not found'});
+      res.status(404).json({ message:'Post not found'});
     }
   } catch(error) {
     console.error(error);
 
-    if(error.name == 'CastError'){
+    if(error.name === 'CastError'){
       return res.status(400).json({ message: `Invalid post Id format: ${req.params.id}` });
     }
-    if(error.name == 'ValidationError'){
-      return res.status(408).json({ message: 'Validation error', error: error.message });
+    if(error.name === 'ValidationError'){
+      return res.status(400).json({ message: 'Validation error', error: error.message });
     }
     res.status(500).json({ message: 'Error updating post', error: error.message });
   }
 };
-
 /**
  * @desc    Delete a blog post
  * @route   DELETE /api/posts/:id

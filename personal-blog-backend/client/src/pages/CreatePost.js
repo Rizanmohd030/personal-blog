@@ -1,20 +1,41 @@
-// client/src/pages/CreatePost.js
-
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiService from '../services/apiService';
+import ImageGallery from '../components/ImageGallery';
 import './CreatePost.css';
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [markdownContent, setMarkdownContent] = useState('');
-  // HIGHLIGHT START
-  // 1. Add a new state variable to hold the categories as a string.
   const [categories, setCategories] = useState('');
-  // HIGHLIGHT END
+  const [images, setImages] = useState([]); // Store images separately
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const textareaRef = useRef(null);
+
+  // Handle image insertion at cursor position
+  const handleImageInsert = (markdownImage) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const cursorPosition = textarea.selectionStart;
+    const currentContent = markdownContent;
+    
+    const newContent = 
+      currentContent.substring(0, cursorPosition) +
+      markdownImage + '\n\n' +
+      currentContent.substring(cursorPosition);
+    
+    setMarkdownContent(newContent);
+    
+    // Focus back on textarea
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPos = cursorPosition + markdownImage.length + 2;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 10);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,27 +48,25 @@ const CreatePost = () => {
       return;
     }
 
-    // HIGHLIGHT START
-    // 2. Transform the categories string into an array of clean strings.
-    // .split(',') creates the array.
-    // .map(cat => cat.trim()) removes any leading/trailing whitespace from each category.
-    // .filter(cat => cat !== '') removes any empty strings that might result from extra commas (e.g., "React,, Node").
     const categoriesArray = categories.split(',').map(cat => cat.trim()).filter(cat => cat);
-    // HIGHLIGHT END
 
     try {
-      // HIGHLIGHT START
-      // 3. Include the new 'categoriesArray' in the payload sent to the API.
+      // Send both markdown content and images array to backend
       await apiService.post('/posts', {
         title,
         markdownContent,
-        categories: categoriesArray, // Send the processed array
+        categories: categoriesArray,
+        images: images, // This will be stored in your MongoDB
         author: 'Admin' 
       });
-      // HIGHLIGHT END
-
+      
+      // Reset form
+      setTitle('');
+      setMarkdownContent('');
+      setCategories('');
+      setImages([]);
+      
       navigate('/admin/dashboard');
-
     } catch (err) {
       console.error('Failed to create post:', err);
       setError(err.response?.data?.message || 'Failed to create post. Please try again.');
@@ -70,20 +89,28 @@ const CreatePost = () => {
             disabled={loading}
           />
         </div>
+
+        {/* Image Gallery Section */}
+        <ImageGallery 
+          images={images}
+          onImagesChange={setImages}
+          onImageInsert={handleImageInsert}
+        />
+
         <div className="form-group">
           <label htmlFor="markdownContent">Content (Markdown)</label>
           <textarea
+            ref={textareaRef}
             id="markdownContent"
             className="form-control markdown-input"
             value={markdownContent}
             onChange={(e) => setMarkdownContent(e.target.value)}
             disabled={loading}
+            rows="15"
+            placeholder="Write your content here. Use the image gallery above to insert images."
           />
         </div>
         
-        {/* HIGHLIGHT START */}
-        {/* 4. Add the new input field for categories to the form. */}
-        {/*    It's a controlled component tied to our 'categories' state. */}
         <div className="form-group">
           <label htmlFor="categories">Categories (comma-separated)</label>
           <input
@@ -96,9 +123,8 @@ const CreatePost = () => {
             disabled={loading}
           />
         </div>
-        {/* HIGHLIGHT END */}
 
-        {error && <p className="error-message\">{error}</p>}
+        {error && <p className="error-message">{error}</p>}
         <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? 'Publishing...' : 'Publish Post'}
         </button>

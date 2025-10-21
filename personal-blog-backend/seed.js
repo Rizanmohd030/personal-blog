@@ -6,7 +6,7 @@ const User = require('./models/userModel');
 dotenv.config();
 
 const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'Rizan@1234';
+const ADMIN_PASSWORD = 'Rizan@123456';
 
 const seedAdmin = async() =>{
     try{

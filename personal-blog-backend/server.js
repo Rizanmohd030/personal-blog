@@ -1,15 +1,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
 // environment variables
 require('dotenv').config();
 
@@ -18,17 +9,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-// importing routing file
+// importing routing files - DO THIS BEFORE app initialization
 const postRoutes = require('./routes/postRoutes');
 const authRoutes = require('./routes/authRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 // instance of express application
 const app = express();
 
 // middleware
-// FIX: Simple CORS that will work
-app.use(cors()); // This allows ALL origins - we can restrict later
-
+app.use(cors());
 app.use(express.json());
 
 // port defining
@@ -37,6 +27,7 @@ const PORT = process.env.PORT || 5000;
 // mount the routes
 app.use('/api/posts', postRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // function to connect the Database and start the server
 const startServer = async () => {
@@ -54,9 +45,6 @@ const startServer = async () => {
 
 // calling function to start server
 startServer();
-
-
-
 
 
 
