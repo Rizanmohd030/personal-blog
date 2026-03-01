@@ -1,0 +1,123 @@
+/* markdown-styles.css - Modern Ravia Aesthetic */
+
+.post-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 8rem 2rem 4rem;
+}
+
+.post-full-content {
+  line-height: 1.8;
+  color: var(--text-main);
+  font-size: 1.1rem;
+}
+
+.post-full-content h1,
+.post-full-content h2,
+.post-full-content h3,
+.post-full-content h4,
+.post-full-content h5,
+.post-full-content h6 {
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  font-weight: 700;
+  color: white;
+  font-family: 'Outfit', sans-serif;
+}
+
+.post-full-content h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, white 0%, var(--text-muted) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.post-full-content h2 {
+  font-size: 1.8rem;
+  border-bottom: 2px solid var(--glass-border);
+  padding-bottom: 0.5rem;
+}
+
+.post-full-content p {
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.post-full-content a {
+  color: var(--accent-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: var(--transition);
+}
+
+.post-full-content a:hover {
+  color: var(--accent-secondary);
+}
+
+.post-full-content code {
+  background: var(--bg-dark);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-family: 'Consolas', monospace;
+  font-size: 0.9em;
+  border: 1px solid var(--glass-border);
+}
+
+.post-full-content pre {
+  background: var(--bg-dark);
+  padding: 1.5rem;
+  border-radius: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--glass-border);
+  margin: 2rem 0;
+}
+
+.post-full-content blockquote {
+  border-left: 4px solid var(--accent-primary);
+  background: var(--glass-bg);
+  padding: 1rem 1.5rem;
+  margin: 2rem 0;
+  border-radius: 0 12px 12px 0;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.post-full-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 3rem auto;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.post-header-centered {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.post-title-centered {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: white;
+  line-height: 1.1;
+}
+
+.post-meta-centered {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.post-categories-centered {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}

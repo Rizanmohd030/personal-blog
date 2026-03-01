@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const dotenv  =require('dotenv');
+const dotenv = require('dotenv');
 const User = require('./models/userModel');
 
 dotenv.config();
@@ -8,37 +8,37 @@ dotenv.config();
 const ADMIN_USERNAME = 'admin';
 const ADMIN_PASSWORD = 'Rizan@123456';
 
-const seedAdmin = async() =>{
-    try{
-        console.log('Connectong to Database...');
+const seedAdmin = async () => {
+    try {
+        console.log('Connecting to Database...');
         await mongoose.connect(process.env.MONGO_URI);
-        console.log('Database connected succesfully!');
+        console.log('Database connected successfully!');
 
-        const existingAdmin = await User.findOne({username: ADMIN_USERNAME});
-        if(existingAdmin){
-            console.log('Admin user already exist.No action taken');
+        const existingAdmin = await User.findOne({ userName: ADMIN_USERNAME });
+        if (existingAdmin) {
+            console.log('Admin user already exists. No action taken');
             return;
         }
-        console.log('Admin user not found.creating a new one...');
+        console.log('Admin user not found. Creating a new one...');
         const adminUser = new User({
-             userName: ADMIN_USERNAME,
-             password: ADMIN_PASSWORD,
+            userName: ADMIN_USERNAME,
+            password: ADMIN_PASSWORD,
         });
         await adminUser.save();
 
 
-    console.log('----------------------------------------------------');
-    console.log('Admin user created successfully!');
-    console.log(`Username: ${ADMIN_USERNAME}`);
-    console.log(`Password: ${ADMIN_PASSWORD}`);
-    console.log('You can now use these credentials to log in.');
-    console.log('----------------------------------------------------');
-    }catch(error){
+        console.log('----------------------------------------------------');
+        console.log('Admin user created successfully!');
+        console.log(`Username: ${ADMIN_USERNAME}`);
+        console.log(`Password: ${ADMIN_PASSWORD}`);
+        console.log('You can now use these credentials to log in.');
+        console.log('----------------------------------------------------');
+    } catch (error) {
         console.error('Error during admin user seeding:', error);
-    }finally{
+    } finally {
         console.log('Disconnecting from database...');
-    await mongoose.disconnect();          //disconnecting database to prevent hanging process
-    console.log('Database disconnected.');
+        await mongoose.disconnect();          //disconnecting database to prevent hanging process
+        console.log('Database disconnected.');
     }
 };
 

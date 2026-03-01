@@ -1,0 +1,59 @@
+/* ImageUpload.css - Modern Ravia Aesthetic */
+
+.image-upload-dropzone {
+  border: 2px dashed var(--glass-border);
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  background: rgba(255, 255, 255, 0.02);
+  margin: 1.5rem 0;
+}
+
+.image-upload-dropzone:hover,
+.image-upload-dropzone.active {
+  border-color: var(--accent-primary);
+  background: rgba(189, 0, 255, 0.05);
+  transform: scale(1.01);
+}
+
+.image-upload-dropzone.uploading {
+  opacity: 0.6;
+  cursor: not-allowed;
+  animation: pulse 2s infinite;
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--accent-primary);
+}
+
+.upload-content p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.upload-content small {
+  color: var(--text-muted);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1.01);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+}

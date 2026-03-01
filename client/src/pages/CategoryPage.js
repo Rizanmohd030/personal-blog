@@ -43,7 +43,7 @@ const CategoryPage = () => {
     };
 
     fetchPostsByCategory();
-    
+
     // 7. The dependency array [categoryName] is crucial. It tells React to re-run
     // this effect (and thus re-fetch data) if the user navigates from one
     // category page to another (e.g., from /category/React to /category/Node).
@@ -62,25 +62,28 @@ const CategoryPage = () => {
   }
 
   return (
-    // We reuse the 'home-page' class for consistent layout and styling.
     <div className="home-page">
       <Helmet>
-        <title>{`Posts in "${categoryName}" | My Awesome Blog`}</title>
-        <meta name="description" content={`Browse all posts categorized under "${categoryName}" on My Awesome Blog.`} />
+        <title>{`Posts in "${categoryName}" | Blog Platform`}</title>
+        <meta name="description" content={`Browse all posts categorized under "${categoryName}" on Blog Platform.`} />
       </Helmet>
 
-      {/* 8. Display a clear, dynamic heading to provide context to the user. */}
-      <h1>Posts in: "{categoryName}"</h1>
+      <section className="hero-section">
+        <h1>Category: <span>{categoryName}</span></h1>
+        <p className="hero-subtitle">Browse all articles related to {categoryName}.</p>
+      </section>
 
-      <div className="post-list">
-        {/* 9. If posts are found, map over them and render a PostListItem for each one.
-             This is the power of component reuse! */}
-        {posts.length > 0 ? (
-          posts.map(post => <PostListItem key={post._id} post={post} />)
-        ) : (
-          // 10. If the API returns an empty array, show a helpful message.
-          <p>No posts found in this category yet.</p>
-        )}
+      <div className="content-container">
+        <h2 className="section-title">Articles in {categoryName}</h2>
+        <div className="post-list">
+          {posts.length > 0 ? (
+            posts.map(post => <PostListItem key={post._id} post={post} />)
+          ) : (
+            <div className="no-posts-glass glass-card">
+              <p>No posts found in this category yet.</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

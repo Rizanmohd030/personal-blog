@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
-import apiService from '../services/apiService'; 
+import apiService from '../services/apiService';
 import { Helmet } from 'react-helmet-async';
 import CategoryTag from '../components/CategoryTag';
-import '../markdown-styles.css'; 
+import '../markdown-styles.css';
 
 const PostPage = () => {
   const { slug } = useParams();
@@ -36,31 +36,49 @@ const PostPage = () => {
       .replace(/\[(.*?)\]\(.*?\)/g, '$1')
       .replace(/[`*#_~]/g, '')
       .replace(/\s+/g, ' ');
-    
+
     return plainText.substring(0, 155).trim() + '...';
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!post) return <div>Post not found.</div>;
+  if (loading) {
+    return (
+      <article className="post-page">
+        <div className="loading-message">Loading post...</div>
+      </article>
+    );
+  }
+  if (error) {
+    return (
+      <article className="post-page">
+        <div className="error-message">{error}</div>
+      </article>
+    );
+  }
+  if (!post) {
+    return (
+      <article className="post-page">
+        <div className="error-message">Post not found.</div>
+      </article>
+    );
+  }
 
   return (
     <article className="post-page">
       <Helmet>
         <title>{`${post.title} | My Awesome Blog`}</title>
-        <meta 
-          name="description" 
-          content={createMetaDescription(post.markdownContent)} 
+        <meta
+          name="description"
+          content={createMetaDescription(post.markdownContent)}
         />
       </Helmet>
-      
+
       {/* ✅ CENTERED TITLE SECTION */}
       <header className="post-header-centered">
         <h1 className="post-title-centered">{post.title}</h1>
         <p className="post-meta-centered">
           By {post.author} on {new Date(post.createdAt).toLocaleDateString()}
         </p>
-        
+
         {post.categories && post.categories.length > 0 && (
           <div className="post-categories-centered">
             {post.categories.map(category => (
@@ -69,7 +87,7 @@ const PostPage = () => {
           </div>
         )}
       </header>
-      
+
       {/* CONTENT SECTION */}
       <div className="post-full-content">
         <ReactMarkdown>{post.markdownContent}</ReactMarkdown>

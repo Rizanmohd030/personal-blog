@@ -15,7 +15,7 @@ const AdminDashboard = () => {
     const fetchPosts = async () => {
       try {
         const response = await apiService.get('/posts');
-          setPosts(response.data.posts || response.data);
+        setPosts(response.data.posts || response.data);
       } catch (err) {
         console.error('Failed to fetch posts:', err);
         setError('Failed to fetch posts. Please try again later.');
@@ -28,7 +28,7 @@ const AdminDashboard = () => {
   }, []);
 
   // 1. Define the handler function for deleting a post.
-  
+
   const handleDelete = async (postId) => {
     // 2. Ask for user confirmation before proceeding with a destructive action.
     // window.confirm() shows a simple browser dialog and returns true (if OK is clicked) or false.
@@ -50,7 +50,7 @@ const AdminDashboard = () => {
       // The .filter() method creates a NEW array containing only the posts whose _id does NOT match the deleted postId.
       // This is the correct, immutable way to remove an item from state in React.
       setPosts(currentPosts => currentPosts.filter(post => post._id !== postId));
-      
+
       alert('Post deleted successfully!');
 
     } catch (err) {
@@ -62,21 +62,29 @@ const AdminDashboard = () => {
   // HIGHLIGHT END
 
   if (loading) {
-    return <div className="loading-message">Loading posts...</div>;
+    return (
+      <div className="admin-dashboard">
+        <div className="loading-message">Loading post management...</div>
+      </div>
+    );
   }
   if (error) {
-    return <div className="error-message">{error}</div>;
+    return (
+      <div className="admin-dashboard">
+        <div className="error-message">{error}</div>
+      </div>
+    );
   }
 
   return (
     <div className="admin-dashboard">
       <div className="dashboard-header">
         <h2>Manage Posts</h2>
-          <Link to="/admin/create-post" className="create-post-btn"> 
+        <Link to="/admin/create-post" className="create-post-btn">
           + Create New Post
         </Link>
-      
-      
+
+
       </div>
 
       <table className="posts-table">
@@ -96,18 +104,8 @@ const AdminDashboard = () => {
                 <td>{post.author}</td>
                 <td>{new Date(post.createdAt).toLocaleDateString()}</td>
                 <td className="action-buttons">
-<Link to={`/admin/edit-post/${post._id}`} className="btn edit-btn">                    Edit
-                  </Link>
-
-                  {/* HIGHLIGHT START */}
-                  {/* 7. Attach the handleDelete function to the onClick event of the button.
-                      We use an arrow function () => ... to ensure that handleDelete(post._id)
-                      is only CALLED when the button is clicked, not during the render.
-                      This also allows us to pass the specific post._id to our handler. */}
-                  <button onClick={() => handleDelete(post._id)} className="btn delete-btn">
-                    Delete
-                  </button>
-                  {/* HIGHLIGHT END */}
+                  <Link to={`/admin/edit-post/${post._id}`} className="btn edit-btn">Edit</Link>
+                  <button onClick={() => handleDelete(post._id)} className="btn delete-btn">Delete</button>
                 </td>
               </tr>
             ))

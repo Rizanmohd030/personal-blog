@@ -1,0 +1,154 @@
+/* AdminDashboard.css - Modern Ravia Style */
+
+.admin-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8rem 2rem 4rem;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.dashboard-header h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  margin: 0;
+}
+
+.create-post-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+  box-shadow: var(--shadow-glow);
+}
+
+.create-post-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(189, 0, 255, 0.4);
+}
+
+.posts-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+  margin-top: -1rem;
+}
+
+.posts-table th {
+  text-align: left;
+  padding: 1rem 1.5rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.posts-table tr td {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 1.5rem;
+  color: white;
+  transition: var(--transition);
+}
+
+.posts-table tr td:first-child {
+  border-left: 1px solid var(--glass-border);
+  border-radius: 16px 0 0 16px;
+}
+
+.posts-table tr td:last-child {
+  border-right: 1px solid var(--glass-border);
+  border-radius: 0 16px 16px 0;
+}
+
+.posts-table tr:hover td {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(189, 0, 255, 0.3);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.action-buttons .btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.edit-btn {
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  color: #2196f3;
+}
+
+.edit-btn:hover {
+  background: #2196f3;
+  color: white;
+}
+
+.delete-btn {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #f44336;
+}
+
+.delete-btn:hover {
+  background: #ff4d4d;
+  color: white;
+}
+
+.loading-message,
+.error-message,
+.no-posts-glass {
+  grid-column: 1 / -1;
+  padding: 4rem;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  margin-top: 2rem;
+}
+
+.error-message {
+  color: #ff4d4d;
+  border-color: rgba(255, 77, 77, 0.3);
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding-top: 6rem;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .posts-table thead {
+    display: none;
+  }
+
+  .posts-table tr td {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 12px !important;
+    margin-bottom: 0.5rem;
+  }
+}

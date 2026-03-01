@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/userModel'); 
+const User = require('../models/userModel');
 
 exports.protect = async (req, res, next) => {
   try {
@@ -15,12 +15,13 @@ exports.protect = async (req, res, next) => {
       });
     }
 
-    // ✅ Modern jwt.verify with built-in promise support
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    const { promisify } = require('util');
+    const verifyToken = promisify(jwt.verify);
+    const decoded = await verifyToken(token, process.env.JWT_SECRET);
 
     // ✅ Exclude password for security
     req.user = await User.findById(decoded.id).select('-password');
-    
+
     if (!req.user) {
       return res.status(401).json({
         status: 'fail',
@@ -44,12 +45,12 @@ exports.protect = async (req, res, next) => {
 
 // const jwt = require('jsonwebtoken');
 // const { promisify } = require('util'); // A Node.js utility to convert callback-based functions to promise-based
-// const User = require('../models/userModel'); 
+// const User = require('../models/userModel');
 
 // // Define the protection middleware function
 // exports.protect = async (req, res, next) => {
 //   try {
-//     // 3. Check if a token exists 
+//     // 3. Check if a token exists
 //     let token;
 //     if (
 //       req.headers.authorization &&

@@ -3,14 +3,14 @@ const router = express.Router();
 
 
 // FIX: Make sure the import matches exactly with your exports
-const { 
-  getAllPosts, 
-  getPostBySlug, 
+const {
+  getAllPosts,
+  getPostBySlug,
   getPostById,  // Make sure this matches exactly
-  createPost, 
-  updatePost, 
-  deletePost, 
-  getPostsByCategory 
+  createPost,
+  updatePost,
+  deletePost,
+  getPostsByCategory
 } = require('../controllers/postController');
 
 
@@ -18,6 +18,14 @@ const {
 
 
 const { protect } = require('../Middleware/authMiddleware');
+const { body } = require('express-validator');
+const { validate } = require('../Middleware/validateMiddleware');
+
+const postValidationRules = [
+  body('title').trim().notEmpty().withMessage('Title is required').isLength({ max: 100 }).withMessage('Title too long'),
+  body('markdownContent').notEmpty().withMessage('Content is required'),
+  body('categories').optional().isArray().withMessage('Categories must be an array'),
+];
 
 // GET all posts
 router.get('/', getAllPosts);
@@ -30,10 +38,10 @@ router.get('/id/:id', getPostById);
 router.get('/:slug', getPostBySlug);
 
 // POST a new post
-router.post('/', protect, createPost);
+router.post('/', protect, postValidationRules, validate, createPost);
 
 // for PUT(update)
-router.put('/:id', protect, updatePost);
+router.put('/:id', protect, postValidationRules, validate, updatePost);
 
 // for DELETE
 router.delete('/:id', protect, deletePost);

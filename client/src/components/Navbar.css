@@ -1,0 +1,94 @@
+.navbar-container {
+  position: sticky;
+  top: 1.5rem;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  padding: 0 1.5rem;
+}
+
+.navbar {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  border-radius: 20px !important;
+  /* Force override for floating look */
+}
+
+.navbar-brand {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.navbar-brand span {
+  color: var(--accent-primary);
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  position: relative;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent-primary);
+  transition: var(--transition);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.login-btn {
+  font-size: 0.9rem !important;
+  padding: 0.6rem 1.2rem !important;
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    top: 1rem;
+    padding: 0 1rem;
+  }
+
+  .navbar {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .navbar-links {
+    gap: 1.5rem;
+  }
+
+  .nav-link {
+    display: none;
+    /* Hide home link on mobile to save space */
+  }
+}

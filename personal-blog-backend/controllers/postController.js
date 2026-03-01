@@ -1,5 +1,5 @@
 const Post = require('../models/postModel');
-const slugify = require('slugify'); 
+const slugify = require('slugify');
 
 
 /**
@@ -10,7 +10,7 @@ const slugify = require('slugify');
 exports.createPost = async (req, res) => {
   try {
     // ADD CATEGORIES: Destructure categories from req.body
-    const { title, markdownContent, categories,images, author } = req.body;
+    const { title, markdownContent, categories, images, author } = req.body;
 
     // A simple backend validation check.
     if (!title || !markdownContent) {
@@ -22,8 +22,8 @@ exports.createPost = async (req, res) => {
       title,
       markdownContent,
       categories,
-      images, // Add categories here
-      author, 
+      images, // Add images here
+      author,
     });
 
     res.status(201).json(newPost);
@@ -39,15 +39,30 @@ exports.createPost = async (req, res) => {
  * @route   GET /api/posts
  * @access  Public (for now)
  */
-exports.getAllPosts = async(req , res) =>{
-  try{
+exports.getAllPosts = async (req, res) => {
+  try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || '';
+
+    console.log(`Search Request - Term: "${search}", Page: ${page}`);
 
     const skip = (page - 1) * limit;
-    const totalPosts = await Post.countDocuments();
-    
-    const posts = await Post.find()
+
+    // Create query object
+    let query = {};
+    if (search) {
+      query = {
+        $or: [
+          { title: { $regex: search, $options: 'i' } },
+          { markdownContent: { $regex: search, $options: 'i' } }
+        ]
+      };
+    }
+
+    const totalPosts = await Post.countDocuments(query);
+
+    const posts = await Post.find(query)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -68,8 +83,8 @@ exports.getAllPosts = async(req , res) =>{
  * @route   GET /api/posts/:slug
  * @access  Public
  */
-exports.getPostBySlug = async(req,res)=>{
-  try{
+exports.getPostBySlug = async (req, res) => {
+  try {
     const post = await Post.findOne({ slug: req.params.slug });
 
     if (!post) {
@@ -77,7 +92,7 @@ exports.getPostBySlug = async(req,res)=>{
     }
 
     res.status(200).json(post);
-  } catch(error){
+  } catch (error) {
     res.status(500).json({ message: 'Error fetching post', error: error.message });
   }
 };
@@ -112,7 +127,7 @@ exports.getPostsByCategory = async (req, res) => {
  * @route   GET /api/posts/id/:id
  * @access  Public
  */
-exports.getPostById = async(req, res) => {
+exports.getPostById = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
@@ -121,8 +136,8 @@ exports.getPostById = async(req, res) => {
     }
 
     res.status(200).json(post);
-  } catch(error) {
-    if(error.name == 'CastError') {
+  } catch (error) {
+    if (error.name == 'CastError') {
       return res.status(400).json({ message: `Invalid post ID format: ${req.params.id}` });
     }
     res.status(500).json({ message: 'Error fetching post', error: error.message });
@@ -134,17 +149,18 @@ exports.getPostById = async(req, res) => {
  * @route   PATCH /api/posts/:id (or PUT)
  * @access  Public (for now)
  */
-exports.updatePost = async(req, res) => {
+exports.updatePost = async (req, res) => {
   try {
     // ✅ FIX: Add 'images' to destructuring
-    const { title, markdownContent, categories, images } = req.body;
+    const { title, markdownContent, categories, images, author } = req.body;
 
     // Create update data object
     const updatedData = {
       title,
       markdownContent,
       categories,
-      images, // Now this will work correctly
+      images,
+      author,
     };
 
     const updatedPost = await Post.findByIdAndUpdate(
@@ -156,18 +172,18 @@ exports.updatePost = async(req, res) => {
       }
     );
 
-    if(updatedPost){
+    if (updatedPost) {
       res.status(200).json(updatedPost);
     } else {
-      res.status(404).json({ message:'Post not found'});
+      res.status(404).json({ message: 'Post not found' });
     }
-  } catch(error) {
+  } catch (error) {
     console.error(error);
 
-    if(error.name === 'CastError'){
+    if (error.name === 'CastError') {
       return res.status(400).json({ message: `Invalid post Id format: ${req.params.id}` });
     }
-    if(error.name === 'ValidationError'){
+    if (error.name === 'ValidationError') {
       return res.status(400).json({ message: 'Validation error', error: error.message });
     }
     res.status(500).json({ message: 'Error updating post', error: error.message });
@@ -178,51 +194,51 @@ exports.updatePost = async(req, res) => {
  * @route   DELETE /api/posts/:id
  * @access  Public (for now)
  */
-exports.deletePost = async (req,res) => {
+exports.deletePost = async (req, res) => {
   try {
-    const deletedPost = await Post.findByIdAndDelete(req.params.id); 
+    const deletedPost = await Post.findByIdAndDelete(req.params.id);
 
-    if(deletedPost){
+    if (deletedPost) {
       res.status(200).json({ message: 'Post deleted successfully' });
     } else {
-      res.status(404).json({ message: 'Post not found' }); 
+      res.status(404).json({ message: 'Post not found' });
     }
-  } catch(error) {
+  } catch (error) {
     console.log(error);
 
-    if(error.name == 'CastError'){
-      return res.status(400).json({ message: `Invalid post ID format: ${req.params.id}` }); 
+    if (error.name == 'CastError') {
+      return res.status(400).json({ message: `Invalid post ID format: ${req.params.id}` });
     }
 
-    res.status(500).json({ message: 'Error deleting post', error: error.message }); 
+    res.status(500).json({ message: 'Error deleting post', error: error.message });
   }
-};  
+};
 
 // Add this to the bottom of your postController.js
 const addSlugsToExistingPosts = async () => {
   try {
     const posts = await Post.find();
     let updatedCount = 0;
-    
+
     for (let post of posts) {
       if (!post.slug) {
         let baseSlug = slugify(post.title, { lower: true, strict: true });
         let finalSlug = baseSlug;
         let counter = 1;
-        
+
         // Make slug unique if another post has same slug
         while (await Post.findOne({ slug: finalSlug, _id: { $ne: post._id } })) {
           finalSlug = `${baseSlug}-${counter}`;
           counter++;
         }
-        
+
         post.slug = finalSlug;
         await post.save();
         updatedCount++;
         console.log(`✅ Added slug to "${post.title}": ${post.slug}`);
       }
     }
-    
+
     console.log(`🎉 Added slugs to ${updatedCount} posts`);
   } catch (error) {
     console.error('❌ Error adding slugs:', error);

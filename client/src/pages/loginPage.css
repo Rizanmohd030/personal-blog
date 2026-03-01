@@ -1,0 +1,80 @@
+/* loginPage.css - Modern Ravia Glassmorphism */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: radial-gradient(circle at top right, rgba(189, 0, 255, 0.15), transparent 40%),
+    radial-gradient(circle at bottom left, rgba(112, 0, 255, 0.15), transparent 40%);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 440px;
+  padding: 3rem;
+  text-align: center;
+}
+
+.login-container h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+  color: white;
+  letter-spacing: -1px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 0.25rem;
+}
+
+.form-group input {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 4px rgba(189, 0, 255, 0.1);
+}
+
+.login-button {
+  margin-top: 1rem;
+  padding: 1.1rem !important;
+  font-size: 1rem !important;
+}
+
+.error-message {
+  color: #ff4d4d;
+  font-size: 0.9rem;
+  background: rgba(255, 77, 77, 0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 77, 77, 0.2);
+  margin-bottom: 1rem;
+}

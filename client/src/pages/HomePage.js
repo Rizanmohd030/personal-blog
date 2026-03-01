@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import apiService from '../services/apiService';
-import PostListItem from '../components/PostListItem'; 
+import PostListItem from '../components/PostListItem';
 import { Helmet } from 'react-helmet-async';
 
 // Assuming you have this component
@@ -32,7 +32,7 @@ const HomePage = () => {
 
         // 5. The backend now returns a structured object. We destructure it.
         const { posts: fetchedPosts, totalPages: fetchedTotalPages } = response.data;
-        
+
         setPosts(fetchedPosts);
         setTotalPages(fetchedTotalPages);
       } catch (err) {
@@ -68,20 +68,29 @@ const HomePage = () => {
   return (
     <div className="home-page">
       <Helmet>
-        <title>My Awesome Blog - Latest Posts</title>
-        <meta 
-          name="description" 
-          content="Welcome to My Awesome Blog. Read the latest articles on web development, technology, and more." 
+        <title>Blog Platform - Latest Posts</title>
+        <meta
+          name="description"
+          content="Welcome to Blog Platform. Read the latest articles on web development, technology, and more."
         />
       </Helmet>
-     
-      <h1>Latest Posts</h1>
-      <div className="post-list">
-        {posts.length > 0 ? (
-          posts.map(post => <PostListItem key={post._id} post={post} />)
-        ) : (
-          <p>No posts to display.</p>
-        )}
+
+      <section className="hero-section">
+        <h1>Latest <span>Posts</span></h1>
+        <p className="hero-subtitle">Discover the latest in tech, development, and digital innovation.</p>
+      </section>
+
+      <div className="content-container">
+        <h2 className="section-title">Latest Articles</h2>
+        <div className="post-list">
+          {posts.length > 0 ? (
+            posts.map(post => <PostListItem key={post._id} post={post} />)
+          ) : (
+            <div className="no-posts-glass glass-card">
+              <p>No posts found yet. Check back soon!</p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 8. Render the pagination controls only if there are posts and pages. */}
