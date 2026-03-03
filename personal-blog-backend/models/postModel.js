@@ -31,12 +31,12 @@ const postSchema = new mongoose.Schema(
       // on the frontend if it expects the array to always exist.
       default: [],
     },
-      images: [{
+    images: [{
       url: String,
       publicId: String,
       caption: String,
       position: Number, // To maintain order
-      uploadedAt: { type: Date, default: Date.now }
+      uploadedAt: { type: Date, default: Date.now },
     }],
     author: {
       type: String,
@@ -57,18 +57,18 @@ const postSchema = new mongoose.Schema(
 //   }
 //   next();
 // });
-postSchema.pre('save', async function(next) {
+postSchema.pre('save', async function (next) {
   if (this.isModified('title') || !this.slug) {
     let baseSlug = slugify(this.title, { lower: true, strict: true });
     let finalSlug = baseSlug;
     let counter = 1;
-    
+
     // Check for duplicates and make unique
     while (await this.constructor.findOne({ slug: finalSlug, _id: { $ne: this._id } })) {
       finalSlug = `${baseSlug}-${counter}`;
       counter++;
     }
-    
+
     this.slug = finalSlug;
   }
   next();

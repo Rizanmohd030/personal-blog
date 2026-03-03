@@ -137,7 +137,7 @@ exports.getPostById = async (req, res) => {
 
     res.status(200).json(post);
   } catch (error) {
-    if (error.name == 'CastError') {
+    if (error.name === 'CastError') {
       return res.status(400).json({ message: `Invalid post ID format: ${req.params.id}` });
     }
     res.status(500).json({ message: 'Error fetching post', error: error.message });
@@ -151,10 +151,9 @@ exports.getPostById = async (req, res) => {
  */
 exports.updatePost = async (req, res) => {
   try {
-    // ✅ FIX: Add 'images' to destructuring
     const { title, markdownContent, categories, images, author } = req.body;
 
-    // Create update data object
+    // Build update data object
     const updatedData = {
       title,
       markdownContent,
@@ -162,6 +161,25 @@ exports.updatePost = async (req, res) => {
       images,
       author,
     };
+
+    // findByIdAndUpdate bypasses Mongoose pre-save hooks, so we must
+    // manually regenerate the slug here when the title has changed.
+    if (title) {
+      const existingPost = await Post.findById(req.params.id);
+      if (existingPost && existingPost.title !== title) {
+        let baseSlug = slugify(title, { lower: true, strict: true });
+        let finalSlug = baseSlug;
+        let counter = 1;
+
+        // Ensure the new slug is unique (excluding the current post)
+        while (await Post.findOne({ slug: finalSlug, _id: { $ne: req.params.id } })) {
+          finalSlug = `${baseSlug}-${counter}`;
+          counter++;
+        }
+
+        updatedData.slug = finalSlug;
+      }
+    }
 
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.id,
@@ -181,7 +199,7 @@ exports.updatePost = async (req, res) => {
     console.error(error);
 
     if (error.name === 'CastError') {
-      return res.status(400).json({ message: `Invalid post Id format: ${req.params.id}` });
+      return res.status(400).json({ message: `Invalid post ID format: ${req.params.id}` });
     }
     if (error.name === 'ValidationError') {
       return res.status(400).json({ message: 'Validation error', error: error.message });
@@ -206,7 +224,7 @@ exports.deletePost = async (req, res) => {
   } catch (error) {
     console.log(error);
 
-    if (error.name == 'CastError') {
+    if (error.name === 'CastError') {
       return res.status(400).json({ message: `Invalid post ID format: ${req.params.id}` });
     }
 
@@ -214,36 +232,3 @@ exports.deletePost = async (req, res) => {
   }
 };
 
-// Add this to the bottom of your postController.js
-const addSlugsToExistingPosts = async () => {
-  try {
-    const posts = await Post.find();
-    let updatedCount = 0;
-
-    for (let post of posts) {
-      if (!post.slug) {
-        let baseSlug = slugify(post.title, { lower: true, strict: true });
-        let finalSlug = baseSlug;
-        let counter = 1;
-
-        // Make slug unique if another post has same slug
-        while (await Post.findOne({ slug: finalSlug, _id: { $ne: post._id } })) {
-          finalSlug = `${baseSlug}-${counter}`;
-          counter++;
-        }
-
-        post.slug = finalSlug;
-        await post.save();
-        updatedCount++;
-        console.log(`✅ Added slug to "${post.title}": ${post.slug}`);
-      }
-    }
-
-    console.log(`🎉 Added slugs to ${updatedCount} posts`);
-  } catch (error) {
-    console.error('❌ Error adding slugs:', error);
-  }
-};
-
-// Run it once - then remove or comment out after
-// addSlugsToExistingPosts();

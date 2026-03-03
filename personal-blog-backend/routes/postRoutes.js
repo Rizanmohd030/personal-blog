@@ -24,6 +24,7 @@ const { validate } = require('../Middleware/validateMiddleware');
 const postValidationRules = [
   body('title').trim().notEmpty().withMessage('Title is required').isLength({ max: 100 }).withMessage('Title too long'),
   body('markdownContent').notEmpty().withMessage('Content is required'),
+  body('author').trim().notEmpty().withMessage('Author is required'),
   body('categories').optional().isArray().withMessage('Categories must be an array'),
 ];
 
